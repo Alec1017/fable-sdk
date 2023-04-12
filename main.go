@@ -2,9 +2,10 @@ package main
 
 import (
 	"encoding/base64"
-	"encoding/json"
+	"encoding/hex"
 	"fmt"
 
+	"github.com/Alec1017/fable-sdk/config"
 	seiSdk "github.com/Alec1017/golang-sdk/core"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,8 +13,17 @@ import (
 
 func main() {
 
+	// load environemnt variables
+	env := config.GetEnv()
+
 	// Instantiate sei client
-	privKey := secp256k1.GenPrivKey()
+	data, err := hex.DecodeString(env.PrivateKey)
+	if err != nil {
+		panic(err)
+	}
+	privKey := &secp256k1.PrivKey{
+		Key: data,
+	}
 	account := sdk.AccAddress(privKey.PubKey().Address())
 	seiClient := seiSdk.NewClientWithDefaultConfig(privKey)
 
@@ -46,13 +56,7 @@ func main() {
 					"threshold": "1"
 			}
 		}
-	}`, account)
-
-	proposalModuleInitMsgJson, err := json.Marshal(proposalModuleInitMsg)
-	if err != nil {
-		panic(err)
-	}
-	proposalModuleInitMsgEncoded := base64.StdEncoding.EncodeToString(proposalModuleInitMsgJson)
+	}`, account.String())
 
 	// Voting & staking module init message
 	votingStakingModuleInitMsg := fmt.Sprintf(`{
@@ -64,28 +68,21 @@ func main() {
 		"unstaking_duration": {
 			"time":300
 		}
-	}`, account)
-
-	votingStakingModuleInitMsgJson, err := json.Marshal(votingStakingModuleInitMsg)
-	if err != nil {
-		panic(err)
-	}
-	votingStakingModuleInitMsgEncoded := base64.StdEncoding.EncodeToString(votingStakingModuleInitMsgJson)
+	}`, account.String())
 
 	// Leaderboard contract & treasury contract init message
 	leaderboardAndTreasuryInitMsg := fmt.Sprintf(`{
 		"should_error": false
 	}`)
 
-	leaderboardAndTreasuryInitMsgJson, err := json.Marshal(leaderboardAndTreasuryInitMsg)
-	if err != nil {
-		panic(err)
-	}
-	leaderboardAndTreasuryInitMsgEncoded := base64.StdEncoding.EncodeToString(leaderboardAndTreasuryInitMsgJson)
+	// Encode the init messages into base64
+	proposalModuleInitMsgEncoded := base64.StdEncoding.EncodeToString([]byte(proposalModuleInitMsg))
+	votingStakingModuleInitMsgEncoded := base64.StdEncoding.EncodeToString([]byte(votingStakingModuleInitMsg))
+	leaderboardAndTreasuryInitMsgEncoded := base64.StdEncoding.EncodeToString([]byte(leaderboardAndTreasuryInitMsg))
 
 	// Core module init message
 	fableDaoCoreInstantiateMsg := fmt.Sprintf(`{
-		"admin": %s,
+		"admin": "%s",
 		"automatically_add_cw20s": false,
 		"automatically_add_cw721s": false,
 		"description": "Fable DAO POC",
@@ -127,7 +124,7 @@ func main() {
 			"label": "Fable DAO Voting n Staking Module",
 			"msg": "%s"
 		}
-	}`, account, daoProposalSignatoryCodeId, proposalModuleInitMsgEncoded, fableDaoLeaderboardCodeId, leaderboardAndTreasuryInitMsgEncoded,
+	}`, account.String(), daoProposalSignatoryCodeId, proposalModuleInitMsgEncoded, fableDaoLeaderboardCodeId, leaderboardAndTreasuryInitMsgEncoded,
 		fableDaoTreasuryCodeId, leaderboardAndTreasuryInitMsgEncoded, fableDaoVotingNativeStakedCodeId, votingStakingModuleInitMsgEncoded)
 
 	response, err := seiClient.InstantiateContract(fableDaoCoreCodeId, fableDaoCoreInstantiateMsg)
