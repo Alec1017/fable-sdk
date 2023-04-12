@@ -133,7 +133,21 @@ func main() {
 		panic(err)
 	}
 
-	contractAddr := seiSdk.GetEventAttributeValue(*response, "instantiate", "_contract_address")
+	for _, log := range response.Logs {
+		for _, event := range log.Events {
+			if event.Type != "instantiate" {
+				continue
+			}
+			for _, attribute := range event.Attributes {
+				if attribute.Key == "_contract_address" {
+					fmt.Println(fmt.Sprintf("Contract Address: %s", attribute.Value))
+				}
 
-	fmt.Println(fmt.Sprintf("Fable DAO Core Address: %s", contractAddr))
+				if attribute.Key == "code_id" {
+					fmt.Println(fmt.Sprintf("Code ID: %s", attribute.Value))
+				}
+
+			}
+		}
+	}
 }
