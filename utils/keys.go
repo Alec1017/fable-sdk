@@ -7,7 +7,15 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+func setSeiBech32Prefix() {
+	config := sdk.GetConfig()
+	config.SetBech32PrefixForAccount("sei", sdk.Bech32PrefixAccPub)
+}
+
 func LoadPrivKeyFromHex(hexPrivKey string) *secp256k1.PrivKey {
+
+	// Ensure Sei bech32 prefix is properly set when creating the account
+	setSeiBech32Prefix()
 
 	// Decode the hex private key
 	data, err := hex.DecodeString(hexPrivKey)
@@ -24,6 +32,9 @@ func LoadPrivKeyFromHex(hexPrivKey string) *secp256k1.PrivKey {
 }
 
 func LoadAccountFromHex(hexPrivKey string) sdk.AccAddress {
+
+	// Ensure Sei bech32 prefix is properly set when creating the account
+	setSeiBech32Prefix()
 
 	// Decode the hex private key
 	data, err := hex.DecodeString(hexPrivKey)
