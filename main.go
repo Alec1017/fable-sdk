@@ -39,7 +39,7 @@ func main() {
 	fableDaoCoreCodeId := uint64(175)
 	fableDaoLeaderboardCodeId := uint64(176)
 	fableDaoTreasuryCodeId := uint64(177)
-	fableDaoVotingNativeStakedCodeId := uint64(178)
+	fableDaoVotingNativeStakedCodeId := uint64(289)
 	daoProposalSignatoryCodeId := uint64(179)
 
 	// Proposal module initialization message
