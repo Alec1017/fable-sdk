@@ -1,10 +1,9 @@
 package main
 
 import (
-	"encoding/base64"
 	"fmt"
 
-	"github.com/Alec1017/fable-sdk/config"
+	"github.com/Alec1017/fable-sdk/contracts"
 	"github.com/Alec1017/fable-sdk/utils"
 
 	seiSdk "github.com/Alec1017/golang-sdk/core"
@@ -13,34 +12,8 @@ import (
 
 func main() {
 
-	// load environemnt variables
-	env := config.GetEnv()
-
-	// Load account from private key
-	privKey := utils.LoadPrivKeyFromHex(env.PrivateKey)
-	account := utils.LoadAccountFromHex(env.PrivateKey)
-
-	// Define configuration values
-	nodeURI := "https://rpc.atlantic-2.seinetwork.io/"
-	chainID := "atlantic-2"
-	broadcastMode := "block"
-	instantiateGasFee := sdk.NewCoin("usei", sdk.NewInt(30000))
-	instantiateGasLimit := uint64(3000000)
-
 	// create sei SDK client
-	seiClient := seiSdk.NewClient(
-		nodeURI,
-		seiSdk.ChainID(chainID),
-		seiSdk.PrivateKey(privKey),
-		seiSdk.BroadcastMode(broadcastMode),
-	)
-
-	// Label the code ID for each Fable contract
-	fableDaoCoreCodeId := uint64(175)
-	fableDaoLeaderboardCodeId := uint64(176)
-	fableDaoTreasuryCodeId := uint64(177)
-	fableDaoVotingNativeStakedCodeId := uint64(289)
-	daoProposalSignatoryCodeId := uint64(179)
+	seiClient := utils.NewDefaultSeiClient()
 
 	// Proposal module initialization message
 	proposalModuleInitMsg := fmt.Sprintf(`{
@@ -64,7 +37,7 @@ func main() {
 					"threshold": "1"
 			}
 		}
-	}`, account.String())
+	}`, seiClient.Account.String())
 
 	// Voting & staking module init message
 	votingStakingModuleInitMsg := fmt.Sprintf(`{
@@ -76,17 +49,12 @@ func main() {
 		"unstaking_duration": {
 			"time":300
 		}
-	}`, account.String())
+	}`, seiClient.Account.String())
 
 	// Leaderboard contract & treasury contract init message
 	leaderboardAndTreasuryInitMsg := fmt.Sprintf(`{
 		"should_error": false
 	}`)
-
-	// Encode the init messages into base64
-	proposalModuleInitMsgEncoded := base64.StdEncoding.EncodeToString([]byte(proposalModuleInitMsg))
-	votingStakingModuleInitMsgEncoded := base64.StdEncoding.EncodeToString([]byte(votingStakingModuleInitMsg))
-	leaderboardAndTreasuryInitMsgEncoded := base64.StdEncoding.EncodeToString([]byte(leaderboardAndTreasuryInitMsg))
 
 	// Core module init message
 	fableDaoCoreInstantiateMsg := fmt.Sprintf(`{
@@ -132,31 +100,34 @@ func main() {
 			"label": "Fable DAO Voting n Staking Module",
 			"msg": "%s"
 		}
-	}`, account.String(),
-		daoProposalSignatoryCodeId,
-		proposalModuleInitMsgEncoded,
-		fableDaoLeaderboardCodeId,
-		leaderboardAndTreasuryInitMsgEncoded,
-		fableDaoTreasuryCodeId,
-		leaderboardAndTreasuryInitMsgEncoded,
-		fableDaoVotingNativeStakedCodeId,
-		votingStakingModuleInitMsgEncoded,
+	}`, seiClient.Account.String(),
+		contracts.DAO_PROPOSAL_SIGNATORY.CodeId,
+		utils.Base64Encode(proposalModuleInitMsg),
+		contracts.FABLE_DAO_LEADERBOARD.CodeId,
+		utils.Base64Encode(leaderboardAndTreasuryInitMsg),
+		contracts.FABLE_DAO_TREASURY.CodeId,
+		utils.Base64Encode(leaderboardAndTreasuryInitMsg),
+		contracts.FABLE_DAO_VOTING_NATIVE_STAKED.CodeId,
+		utils.Base64Encode(votingStakingModuleInitMsg),
 	)
 
+	// Instantiate the contract
 	response, err := seiClient.InstantiateContract(
-		fableDaoCoreCodeId,
+		contracts.FABLE_DAO_CORE.CodeId,
 		"Fable DAO Core",
 		fableDaoCoreInstantiateMsg,
 		[]sdk.Coin{},
 		false,
-		seiSdk.GasFee(instantiateGasFee),
-		seiSdk.GasLimit(instantiateGasLimit),
+		seiSdk.GasFee(sdk.NewCoin("usei", sdk.NewInt(30000))),
+		seiSdk.GasLimit(uint64(3000000)),
 	)
 
+	// check for deployment errors
 	if err != nil {
 		panic(err)
 	}
 
+	// log all code IDs and their deployment addresses
 	for _, log := range response.Logs {
 		for _, event := range log.Events {
 			if event.Type != "instantiate" {

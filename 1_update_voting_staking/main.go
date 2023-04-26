@@ -1,10 +1,9 @@
 package main
 
 import (
-	"encoding/base64"
 	"fmt"
 
-	"github.com/Alec1017/fable-sdk/config"
+	"github.com/Alec1017/fable-sdk/contracts"
 	"github.com/Alec1017/fable-sdk/utils"
 
 	seiSdk "github.com/Alec1017/golang-sdk/core"
@@ -12,30 +11,8 @@ import (
 )
 
 func main() {
-	// load environemnt variables
-	env := config.GetEnv()
-
-	// Load account from private key
-	privKey := utils.LoadPrivKeyFromHex(env.PrivateKey)
-	account := utils.LoadAccountFromHex(env.PrivateKey)
-
-	// Define configuration values
-	nodeURI := "https://sei-testnet-rpc.polkachu.com/"
-	chainID := "atlantic-2"
-	broadcastMode := "block"
-	instantiateGasFee := sdk.NewCoin("usei", sdk.NewInt(30000))
-	instantiateGasLimit := uint64(3000000)
-
-	fable_dao_core_contract_addr := "sei10ptghqesxycs2x0enhu4p0vyjxhs76ze4ey29lv0507uzl6tg45sdmd0tk"
-	fableDaoVotingNativeStakedCodeId := uint64(289)
-
 	// create sei SDK client
-	seiClient := seiSdk.NewClient(
-		nodeURI,
-		seiSdk.ChainID(chainID),
-		seiSdk.PrivateKey(privKey),
-		seiSdk.BroadcastMode(broadcastMode),
-	)
+	seiClient := utils.NewDefaultSeiClient()
 
 	// Voting & staking module init message
 	votingStakingModuleInitMsg := fmt.Sprintf(`{
@@ -43,12 +20,15 @@ func main() {
 			"core_module":{}
 		},
 		"manager": "%s",
-		"denom": "factory/sei1x9rszpesgkk486l4lpztxhaz7vjhgcdjuqhsxx9m5zycuvwce64s5h9gj3/RACE",
+		"denom": "%s",
 		"unstaking_duration": {
 			"time":300
 		}
-	}`, account.String())
+	}`, seiClient.Account.String(),
+		contracts.FABLE_TOKEN.Denom,
+	)
 
+	// Update the voting/staking module with a new contract
 	fableDaoCoreVotingStakingMsg := fmt.Sprintf(`{
 		"update_voting_module": {
 			"module": {
@@ -61,10 +41,11 @@ func main() {
 			}
 		}
 	}`,
-		fableDaoVotingNativeStakedCodeId,
-		base64.StdEncoding.EncodeToString([]byte(votingStakingModuleInitMsg)),
+		contracts.FABLE_DAO_VOTING_NATIVE_STAKED.CodeId,
+		utils.Base64Encode(votingStakingModuleInitMsg),
 	)
 
+	// Create a wrapper message that the admin will execute
 	admin_msg := fmt.Sprintf(`{
 		"execute_admin_msgs":{
 			"msgs":[
@@ -80,22 +61,24 @@ func main() {
 			]
 		}
 	}`,
-		fable_dao_core_contract_addr,
-		base64.StdEncoding.EncodeToString([]byte(fableDaoCoreVotingStakingMsg)),
+		contracts.FABLE_DAO_CORE.Addr,
+		utils.Base64Encode(fableDaoCoreVotingStakingMsg),
 	)
 
+	// Execute the contract call
 	response, err := seiClient.ExecuteContract(
-		fable_dao_core_contract_addr,
-		1,
+		contracts.FABLE_DAO_CORE.Addr,
 		admin_msg,
 		[]sdk.Coin{},
-		seiSdk.GasFee(instantiateGasFee),
-		seiSdk.GasLimit(instantiateGasLimit),
+		seiSdk.GasFee(sdk.NewCoin("usei", sdk.NewInt(19000))),
+		seiSdk.GasLimit(uint64(1900000)),
 	)
 
+	// Check for execution errors
 	if err != nil {
 		panic(err)
 	}
 
+	// Print the raw log response
 	fmt.Println(response.RawLog)
 }

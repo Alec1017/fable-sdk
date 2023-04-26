@@ -9,6 +9,8 @@ import (
 // Definitions for environment variables
 type Env struct {
 	PrivateKey string
+	NodeUri    string
+	ChainId    string
 }
 
 // Reads in variable from environment, and checks that it is set
@@ -44,13 +46,15 @@ func GetEnv() *Env {
 		}
 	}
 
-	// Read in from environment variables
+	// Read in from environment variables, and check that it is set
 	readInVariable("PRIVATE_KEY")
+	readInVariable("NODE_URI")
+	readInVariable("CHAIN_ID")
 
 	// Retrieve config variables
-	privateKey := viper.GetString("PRIVATE_KEY")
-
 	return &Env{
-		PrivateKey: privateKey,
+		PrivateKey: viper.GetString("PRIVATE_KEY"),
+		NodeUri:    viper.GetString("NODE_URI"),
+		ChainId:    viper.GetString("CHAIN_ID"),
 	}
 }
