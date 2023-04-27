@@ -6,8 +6,8 @@ import (
 	"github.com/Alec1017/fable-sdk/contracts"
 	"github.com/Alec1017/fable-sdk/utils"
 
-	seiSdk "github.com/Alec1017/golang-sdk/core"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sei-protocol/golang-sdk/client"
 )
 
 func main() {
@@ -118,8 +118,8 @@ func main() {
 		fableDaoCoreInstantiateMsg,
 		[]sdk.Coin{},
 		false,
-		seiSdk.GasFee(sdk.NewCoin("usei", sdk.NewInt(30000))),
-		seiSdk.GasLimit(uint64(3000000)),
+		client.GasFee(sdk.NewCoin("usei", sdk.NewInt(30000))),
+		client.GasLimit(uint64(3000000)),
 	)
 
 	// check for deployment errors

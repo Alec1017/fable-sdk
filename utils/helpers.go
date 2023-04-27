@@ -3,10 +3,10 @@ package utils
 import (
 	"github.com/Alec1017/fable-sdk/config"
 
-	seiSdk "github.com/Alec1017/golang-sdk/core"
+	"github.com/sei-protocol/golang-sdk/client"
 )
 
-func NewDefaultSeiClient() *seiSdk.Client {
+func NewDefaultSeiClient() *client.Client {
 	// load environemnt variables
 	env := config.GetEnv()
 
@@ -14,12 +14,16 @@ func NewDefaultSeiClient() *seiSdk.Client {
 	privKey := LoadPrivKeyFromHex(env.PrivateKey)
 
 	// create sei SDK client
-	seiClient := seiSdk.NewClient(
+	seiClient := client.NewClient(
 		env.NodeUri,
-		seiSdk.ChainID(env.ChainId),
-		seiSdk.PrivateKey(privKey),
-		seiSdk.BroadcastMode("block"),
+		client.ChainID(env.ChainId),
+		client.PrivateKey(privKey),
+		client.BroadcastMode("block"),
 	)
 
 	return seiClient
+}
+
+func ExecuteAdminMsgs() {
+
 }
