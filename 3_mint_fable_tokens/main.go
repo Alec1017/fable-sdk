@@ -20,7 +20,7 @@ func main() {
 			"mint_and_send":{
 				"amount":{
 					"denom":"%s", 
-					"amount":"10000000000000000"
+					"amount":"10"
 				}, 
 				"recipient":"sei1jgttaksncs09m8zwmpew97achehqaxlv43hlzw"
 			}
