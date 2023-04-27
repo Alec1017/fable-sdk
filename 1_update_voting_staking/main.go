@@ -20,10 +20,7 @@ func main() {
 			"core_module":{}
 		},
 		"manager": "%s",
-		"denom": "%s",
-		"unstaking_duration": {
-			"time":300
-		}
+		"denom": "%s"
 	}`, seiClient.Account.String(),
 		contracts.FABLE_TOKEN.Denom,
 	)

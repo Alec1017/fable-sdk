@@ -19,7 +19,7 @@ var FABLE_DAO_TREASURY = types.Contract{
 
 var FABLE_DAO_VOTING_NATIVE_STAKED = types.Contract{
 	CodeId: uint64(289),
-	Addr:   "sei1pe8dj25nzz58nr7jmv9g2nh7n0dd9qcu3crjty3s8yrj5xzz5jvqjj7fl6",
+	Addr:   "sei1d945uq7zf42wfxjsz29mxlvgpsytdqyn6hzz60myrfga7p0h25qszj07z9",
 }
 
 var DAO_PROPOSAL_SIGNATORY = types.Contract{
