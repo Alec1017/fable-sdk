@@ -1,3 +1,3 @@
 package contracts
 
-var FABLE_TOKEN = NewFactoryToken("sei1x9rszpesgkk486l4lpztxhaz7vjhgcdjuqhsxx9m5zycuvwce64s5h9gj3", "RACE")
+var FABLE_TOKEN = NewFactoryToken("sei1rrhh4syyqsl4gtml0t55mcmt34x98gne23fgk3hsas0pjfw2mhyqhz5rxq", "FABLE")

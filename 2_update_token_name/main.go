@@ -14,35 +14,31 @@ func main() {
 	// create sei SDK client
 	seiClient := utils.NewDefaultSeiClient()
 
-	// Voting & staking module init message
-	votingStakingModuleInitMsg := fmt.Sprintf(`{
-		"owner": {
-			"core_module":{}
-		},
-		"manager": "%s",
-		"denom": "%s",
-		"unstaking_duration": {
-			"time":300
-		}
-	}`, seiClient.Account.String(),
-		contracts.FABLE_TOKEN.Denom,
-	)
+	// Treasury contract init message
+	treasuryInitMsg := fmt.Sprintf(`{
+		"should_error": false
+	}`)
 
-	// Update the voting/staking module with a new contract
-	fableDaoCoreVotingStakingMsg := fmt.Sprintf(`{
-		"update_voting_module": {
-			"module": {
-				"admin": {
-					"core_module": {}
-				},
-				"code_id": %d,
-				"label": "Fable DAO Voting and Staking Module",
-				"msg": "%s"
-			}
+	// Update the treasury module with a new contract
+	updateGeneratePurposeModuleMsg := fmt.Sprintf(`{
+		"update_general_purpose_modules": {
+			"to_add": [
+				{
+					"admin": {
+						"core_module": {}
+					},
+					"code_id": %d,
+					"label": "Fable Treasury Module",
+					"msg": "%s"
+				}
+			],
+			"to_remove": [ "%s" ],
+			"to_update": []
 		}
 	}`,
-		contracts.FABLE_DAO_VOTING_NATIVE_STAKED.CodeId,
-		utils.Base64Encode(votingStakingModuleInitMsg),
+		contracts.FABLE_DAO_TREASURY.CodeId,
+		utils.Base64Encode(treasuryInitMsg),
+		"sei1x9rszpesgkk486l4lpztxhaz7vjhgcdjuqhsxx9m5zycuvwce64s5h9gj3",
 	)
 
 	// Create a wrapper message that the admin will execute
@@ -62,7 +58,7 @@ func main() {
 		}
 	}`,
 		contracts.FABLE_DAO_CORE.Addr,
-		utils.Base64Encode(fableDaoCoreVotingStakingMsg),
+		utils.Base64Encode(updateGeneratePurposeModuleMsg),
 	)
 
 	// Execute the contract call

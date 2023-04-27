@@ -13,13 +13,13 @@ var FABLE_DAO_LEADERBOARD = types.Contract{
 }
 
 var FABLE_DAO_TREASURY = types.Contract{
-	CodeId: uint64(177),
-	Addr:   "sei1x9rszpesgkk486l4lpztxhaz7vjhgcdjuqhsxx9m5zycuvwce64s5h9gj3",
+	CodeId: uint64(328),
+	Addr:   "sei1rrhh4syyqsl4gtml0t55mcmt34x98gne23fgk3hsas0pjfw2mhyqhz5rxq",
 }
 
 var FABLE_DAO_VOTING_NATIVE_STAKED = types.Contract{
 	CodeId: uint64(289),
-	Addr:   "sei1lfee0lg9dj83m702pg9cr6mh8cskjyj7r32rtat623utlh24pvpscyrrhy",
+	Addr:   "sei1pe8dj25nzz58nr7jmv9g2nh7n0dd9qcu3crjty3s8yrj5xzz5jvqjj7fl6",
 }
 
 var DAO_PROPOSAL_SIGNATORY = types.Contract{
