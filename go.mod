@@ -12,7 +12,7 @@ require (
 	filippo.io/edwards25519 v1.0.0-beta.2 // indirect
 	github.com/99designs/keyring v1.1.6 // indirect
 	github.com/CosmWasm/wasmd v0.27.0 // indirect
-	github.com/CosmWasm/wasmvm v1.0.0 // indirect
+	github.com/CosmWasm/wasmvm v1.0.1 // indirect
 	github.com/armon/go-metrics v0.4.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/speakeasy v0.1.0 // indirect
@@ -98,7 +98,7 @@ require (
 	github.com/rs/zerolog v1.27.0 // indirect
 	github.com/sasha-s/go-deadlock v0.3.1 // indirect
 	github.com/savaki/jq v0.0.0-20161209013833-0e6baecebbf8 // indirect
-	github.com/sei-protocol/sei-chain v0.0.0-20230407185243-23c511f11cc4 // indirect
+	github.com/sei-protocol/sei-chain v0.0.0-20230428212757-741019ccf65b // indirect
 	github.com/sei-protocol/sei-tm-db v0.0.5 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
@@ -140,11 +140,11 @@ require (
 replace (
 	github.com/CosmWasm/wasmd => github.com/sei-protocol/sei-wasmd v0.0.1
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
-	github.com/cosmos/cosmos-sdk => github.com/sei-protocol/sei-cosmos v0.2.14
+	github.com/cosmos/cosmos-sdk => github.com/sei-protocol/sei-cosmos v0.2.26
 	github.com/cosmos/iavl => github.com/sei-protocol/sei-iavl v0.1.3
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 	github.com/keybase/go-keychain => github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4
 	github.com/sei-protocol/golang-sdk => ../golang-sdk
-	github.com/tendermint/tendermint => github.com/sei-protocol/sei-tendermint v0.2.4
+	github.com/tendermint/tendermint => github.com/sei-protocol/sei-tendermint v0.2.13
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
 )

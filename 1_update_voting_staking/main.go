@@ -20,7 +20,8 @@ func main() {
 			"core_module":{}
 		},
 		"manager": "%s",
-		"denom": "%s"
+		"denom": "%s",
+		"unstaking_lock": false
 	}`, seiClient.Account.String(),
 		contracts.FABLE_TOKEN.Denom,
 	)
@@ -38,7 +39,7 @@ func main() {
 			}
 		}
 	}`,
-		contracts.FABLE_DAO_VOTING_NATIVE_STAKED.CodeId,
+		contracts.FABLE_DAO_VOTING_STAKING.CodeId,
 		utils.Base64Encode(votingStakingModuleInitMsg),
 	)
 

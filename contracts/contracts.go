@@ -17,9 +17,9 @@ var FABLE_DAO_TREASURY = types.Contract{
 	Addr:   "sei1rrhh4syyqsl4gtml0t55mcmt34x98gne23fgk3hsas0pjfw2mhyqhz5rxq",
 }
 
-var FABLE_DAO_VOTING_NATIVE_STAKED = types.Contract{
-	CodeId: uint64(289),
-	Addr:   "sei1d945uq7zf42wfxjsz29mxlvgpsytdqyn6hzz60myrfga7p0h25qszj07z9",
+var FABLE_DAO_VOTING_STAKING = types.Contract{
+	CodeId: uint64(344),
+	Addr:   "sei1a4l7gps9tpn4pk2dahtda9ntlwuvkxfxxnk2653fr455r6y3mdgqxr4vuh",
 }
 
 var DAO_PROPOSAL_SIGNATORY = types.Contract{
