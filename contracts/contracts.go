@@ -9,7 +9,7 @@ var FABLE_DAO_CORE = types.Contract{
 
 var FABLE_DAO_LEADERBOARD = types.Contract{
 	CodeId: uint64(176),
-	Addr:   "sei1t6k44ltqmr9alpenr8fu2g6rl8st0z8y9pl4vgg2t5p3dcqyhdyq3ny0qy",
+	Addr:   "sei13w0xghslf6vvzjpsamfzp57ckwjm695edtpnyv7wy0gvwfswarkq4qv9ms",
 }
 
 var FABLE_DAO_TREASURY = types.Contract{
